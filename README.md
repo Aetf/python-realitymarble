@@ -10,12 +10,16 @@ Here are [installation instructions](https://github.com/mitsuhiko/pipsi#readme).
 
 Simply run:
 
+```shell
     $ pipsi install .
+```
 
 
 # Usage
 
 To use it:
 
+```shell
     $ realitymarble --help
+```
 
