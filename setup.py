@@ -21,7 +21,7 @@ setup(
     install_requires=dependencies,
     entry_points={
         'console_scripts': [
-            'realitymarble = realitymarble.cli:main',
+            'realitymarble = ucw.cli:main',
         ],
     },
     classifiers=[
