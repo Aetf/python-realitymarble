@@ -116,7 +116,7 @@ class RealityMarble(object):
         print('matching {}'.format(path))
 
         matchlist = sorted([ph.match(path)
-                                  for ph in self.phantasms], reverse=True)
+                            for ph in self.phantasms], reverse=True)
         print('matchlist is {}'.format(matchlist))
         (score, target) = matchlist[0]
         if score == 0:

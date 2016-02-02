@@ -42,7 +42,7 @@ def sudo(func, *args, **kwargs):
                             stdout=subprocess.PIPE, universal_newlines=True)
     print('Got stdout from subprocess: {}.'.format(result.stdout))
     if len(result.stdout) > 0:
-	    return json.loads(result.stdout)
+        return json.loads(result.stdout)
 
 
 def class_by_name(name):
