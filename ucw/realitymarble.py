@@ -1,5 +1,6 @@
 import os
 import json
+import sys
 
 from ucw.utils import canonical_path, is_sub, class_by_name
 from ucw.linkrize import linkrize
@@ -39,7 +40,9 @@ class Phantasm(object):
         if is_sub(self.joint_path, path):
             target = os.path.join(
                 self.base_path, os.path.relpath(path, self.joint_path))
+            print("target before adjust: {}".format(target), file=sys.stderr)
             target = self.adjust(target)
+            print("target after adjust: {}".format(target), file=sys.stderr)
             return (len(self.joint_path), target)
         return (0, None)
 
@@ -52,10 +55,11 @@ class NoHiddenPhantasm(Phantasm):
     """A specilized Phantasm that reveals hidden files inside it"""
 
     def adjust(self, target):
-        (head, tail) = os.path.split(target)
-        if tail.startwith('.'):
-            tail = tail[1:]
-        return os.path.join(head, tail)
+        relpath = os.path.relpath(target, self.base_path)
+        print("relpath is {}".format(relpath), file=sys.stderr)
+        if relpath.startswith('.'):
+            relpath = relpath[1:]
+        return os.path.join(self.base_path, relpath)
 
 
 class ScriptsPhantasm(Phantasm):
