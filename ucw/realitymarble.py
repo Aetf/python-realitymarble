@@ -88,15 +88,22 @@ class RealityMarble(object):
             with open(config_path, "w") as fconfig:
                 print(DEFAULT_CONFIG, file=fconfig)
         with open(config_path) as fconfig:
-            self.create_phantasms(fconfig)
+            config = json.load(fconfig)
+            self._create_phantasms(config)
 
-    def create_phantasms(self, fconfig):
-        config = json.load(fconfig)
+    def _create_phantasms(self, config):
         for ph in config['phantasms']:
             clz = class_by_name(ph['type'])
             joint_path = canonical_path(ph['joint_path'])
             base_path = canonical_path(self.path, ph['name'])
             self.phantasms.append(clz(base_path, joint_path))
+
+    def _match_phantasms(self, path):
+        logger.debug('matching %s', path)
+        matchlist = sorted([ph.match(path)
+                            for ph in self.phantasms], reverse=True)
+        logger.debug('matchlist is {}'.format(matchlist))
+        return matchlist[0]
 
     def dump_config(self):
         logger.info('Reality Marble at %s', self.path)
@@ -117,14 +124,8 @@ class RealityMarble(object):
             logger.error('skip files inside our base')
             return
 
-        logger.debug('matching %s', path)
-
-        matchlist = sorted([ph.match(path)
-                            for ph in self.phantasms], reverse=True)
-        logger.debug('matchlist is {}'.format(matchlist))
-        (score, target) = matchlist[0]
+        (score, target) = self._match_phantasms(path)
         if score == 0:
-            # TODO: no matches found
             logger.error('no matching phantasm found')
             return
 
@@ -142,18 +143,12 @@ class RealityMarble(object):
         path = canonical_path(path, resolve_link=False)
         logger.debug('canonicalized path: {}'.format(path))
         if is_sub(self.path, path):
-            # TODO: skip files inside our base
-            print('skip files inside our base')
+            logger.error('skip files inside our base')
             return
 
-        print('matching {}'.format(path))
-        matchlist = sorted([ph.match(path)
-                            for ph in self.phantasms], reverse=True)
-        print('matchlist is {}'.format(matchlist))
-        (score, target) = matchlist[0]
+        (score, target) = self._match_phantasms(path)
         if score == 0:
-            # TODO: no matches found
-            print('no matches found, this symlink is not managed by the reality marble.')
+            logger.error('no matches found, this symlink is not managed by the reality marble.')
             return
 
         logger.debug('unlinkrize {}'.format(path))
