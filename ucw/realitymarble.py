@@ -1,9 +1,11 @@
 import os
 import json
 import sys
+import logging
+logger = logging.getLogger(__name__)
 
 from ucw.utils import canonical_path, is_sub, class_by_name
-from ucw.linkrize import linkrize
+from ucw.linkrize import linkrize, unlinkrize
 
 DEFAULT_CONFIG = """
 {
@@ -40,13 +42,15 @@ class Phantasm(object):
         if is_sub(self.joint_path, path):
             target = os.path.join(
                 self.base_path, os.path.relpath(path, self.joint_path))
-            print("target before adjust: {}".format(target), file=sys.stderr)
-            target = self.adjust(target)
-            print("target after adjust: {}".format(target), file=sys.stderr)
+
+            logger.debug('target before adjust: %s', target)
+            target = self._adjust(target)
+            logger.debug('target after adjust: %s', target)
+
             return (len(self.joint_path), target)
         return (0, None)
 
-    def adjust(self, target):
+    def _adjust(self, target):
         """Adjust target before returns it"""
         return target
 
@@ -54,9 +58,8 @@ class Phantasm(object):
 class NoHiddenPhantasm(Phantasm):
     """A specilized Phantasm that reveals hidden files inside it"""
 
-    def adjust(self, target):
+    def _adjust(self, target):
         relpath = os.path.relpath(target, self.base_path)
-        print("relpath is {}".format(relpath), file=sys.stderr)
         if relpath.startswith('.'):
             relpath = relpath[1:]
         return os.path.join(self.base_path, relpath)
@@ -96,38 +99,62 @@ class RealityMarble(object):
             self.phantasms.append(clz(base_path, joint_path))
 
     def dump_config(self):
-        print('marble path: {}'.format(self.path))
+        logger.info('Reality Marble at %s', self.path)
         for ph in self.phantasms:
-            print('    {} ({}), type: {}'.format(
-                ph.base_path, ph.joint_path, ph.__class__))
+            logger.info('    %s (%s), type: %s', ph.base_path,
+                        ph.joint_path, ph.__class__.__name__)
 
     def collect(self, path):
         if len(self.phantasms) == 0:
-            # TODO: no phantasms found
-            print('no phantasm found')
+            logger.error('no configured phantasm found.')
             return
         if os.path.islink(path):
-            # TODO: collecting a symlink
-            print('collecting a symlink')
+            logger.error('can not collect a symlink.')
             return
 
         path = canonical_path(path)
+        if is_sub(self.path, path):
+            logger.error('skip files inside our base')
+            return
+
+        logger.debug('matching %s', path)
+
+        matchlist = sorted([ph.match(path)
+                            for ph in self.phantasms], reverse=True)
+        logger.debug('matchlist is {}'.format(matchlist))
+        (score, target) = matchlist[0]
+        if score == 0:
+            # TODO: no matches found
+            logger.error('no matching phantasm found')
+            return
+
+        logger.debug('linkrize {} to {}'.format(path, target))
+        linkrize(path, target)
+
+    def drop(self, path):
+        if len(self.phantasms) == 0:
+            logger.error('no configured phantasm found.')
+            return
+        if not os.path.islink(path):
+            logger.error('can not drop a non-symlink.')
+            return
+
+        path = canonical_path(path, resolve_link=False)
+        logger.debug('canonicalized path: {}'.format(path))
         if is_sub(self.path, path):
             # TODO: skip files inside our base
             print('skip files inside our base')
             return
 
         print('matching {}'.format(path))
-
         matchlist = sorted([ph.match(path)
                             for ph in self.phantasms], reverse=True)
         print('matchlist is {}'.format(matchlist))
         (score, target) = matchlist[0]
         if score == 0:
             # TODO: no matches found
-            print('no matches found')
+            print('no matches found, this symlink is not managed by the reality marble.')
             return
 
-        #print('linkrize {} to {}'.format(path, target))
-
-        linkrize(path, target)
+        logger.debug('unlinkrize {}'.format(path))
+        unlinkrize(path)

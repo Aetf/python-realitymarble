@@ -1,0 +1,14 @@
+Implement project: make a symlink outside pointing to the file in reality marble
+Implement materialize: make a outside symlink pointing to reality marble be a normal file
+
+Implement expand: expand an existing reality marble, project all config files 
+Implement init: initialize a new reality marble
+Implement dropall: drop all config files in reality marble
+
+Implement new: add a new config file in reality marble and project it into the system
+[DONE] Implement collect: collect a outside normal file into reality marble and make it a symlink
+[DONE] Implement drop: materialize the file and remove it from reality marble
+
+Fix owner and mode when collect
+
+[DONE] Minimal log system

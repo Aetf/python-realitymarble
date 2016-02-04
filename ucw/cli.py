@@ -1,8 +1,9 @@
 import click
 import json
+import logging
 
 from ucw.realitymarble import RealityMarble
-from ucw.utils import sudo, class_by_name
+from ucw.utils import sudo, do, class_by_name
 
 
 @click.group(invoke_without_command=True)
@@ -18,11 +19,15 @@ def main(ctx, reality_marble, debug):
     Manage configuration files in your own reality marble
     and recreate your system by projecting them on top of an existing system.
     """
+    logging.basicConfig(level=logging.WARNING,
+                        format='%(name)s - [%(levelname)s] - %(message)s')
+
     marble = RealityMarble(reality_marble)
     if not ctx.obj:
         ctx.obj = {}
     ctx.obj['marble'] = marble
     if debug:
+        logging.getLogger().setLevel(logging.NOTSET)
         marble.dump_config()
 
 
@@ -37,11 +42,23 @@ def collect(ctx, files):
         ctx.obj['marble'].collect(f)
 
 
+@main.command()
+@click.pass_context
+@click.argument('files', nargs=-1, type=click.Path(dir_okay=False))
+def drop(ctx, files):
+    """
+    Drop FILES from your reality marble, and do not manage them anymore.
+    """
+    for f in files:
+        ctx.obj['marble'].drop(f)
+
+
 @main.command(name='sudohelper')
 @click.pass_context
 @click.argument('method', required=True)
 @click.argument('args')
 def sudo_helper(ctx, method, args):
     argv = json.loads(args)
-    res = class_by_name(method)(*argv)
+    #res = class_by_name(method)(*argv)
+    res = do(method, *argv)
     click.echo(json.dumps(res))
