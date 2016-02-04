@@ -65,7 +65,7 @@ def retryWithSudo(func):
         try:
             result = func(*args, **kwargs)
         except PermissionError:
-            print("retry with sudo")
+            logger.info("retry with sudo")
             result = sudo(funcId, *args, **kwargs)
         return result
     return wrapper
