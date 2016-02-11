@@ -42,6 +42,29 @@ def unlink(path, force=False):
         if not force:
             raise
 
+
+def rmdir(path, stop_at='', ignore_fail_on_non_empty=False, continue_on_parent=True):
+    """remove empty directories"""
+    if not os.path.isdir(path):
+        raise NotADirectoryError
+
+    if len(stop_at) != 0 and not is_sub(stop_at, path):
+        raise ValueError("stop_at must be a parent of path if it's not empty")
+
+    while True:
+        try:
+            os.rmdir(path)
+        except OSError as err:
+            if err.errno == errno.ENOTEMPTY and ignore_fail_on_non_empty:
+                break
+            raise
+        if not continue_on_parent:
+            break
+        path = os.path.dirname(path)
+        if len(stop_at) != 0 and not is_sub(stop_at, path):
+            break
+
+
 _func_map = dict()
 
 
