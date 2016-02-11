@@ -23,6 +23,7 @@ def canonical_path(path, *paths, resolve_link=True):
 
 
 def is_sub(parent, path):
+    """if path is considered inside parent path"""
     parent = canonical_path(parent, resolve_link=False)
     path = canonical_path(path, resolve_link=False)
     return os.path.commonprefix([parent, path]) == parent
@@ -34,6 +35,7 @@ def resolve_conflict(file, target):
 
 
 def unlink(path, force=False):
+    """unlink the path, when force is True, ignore FileNotFoundError."""
     try:
         os.unlink(path)
     except FileNotFoundError:
@@ -61,6 +63,7 @@ def do(funcId, *args, **kwargs):
 def retryWithSudo(func):
     funcId = '.'.join([func.__module__, func.__qualname__])
     _func_map[funcId] = func
+
     def wrapper(*args, **kwargs):
         try:
             result = func(*args, **kwargs)
