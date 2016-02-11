@@ -5,7 +5,7 @@ import shutil
 import logging
 logger = logging.getLogger(__name__)
 
-from ucw.utils import canonical_path, resolve_conflict, sudo, retryWithSudo, unlink
+from ucw.utils import canonical_path, resolve_conflict, sudo, retryWithSudo, unlink, rmdir
 
 
 @retryWithSudo
@@ -49,13 +49,18 @@ def linkrize(path, target):
             return finished
 
     try:
+        os.makedirs(os.path.dirname(target), exist_ok=True)
         shutil.copyfile(path, target)
         unlink(path)
         os.symlink(target, path)
         finished = True
+    except Exception as err:
+        logger.debug('The following exception raised when linkrize:', exc_info=True)
+        raise
     finally:
         if not finished:
             # clean up
             logger.info('roll back partially done operation for linkrize')
             unlink(target, force=True)
+            rmdir(os.path.dirname(target), ignore_fail_on_non_empty=True)
     return finished
