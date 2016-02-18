@@ -5,12 +5,17 @@ Implement expand: expand an existing reality marble, project all config files
 Implement init: initialize a new reality marble
 Implement dropall: drop all config files in reality marble
 
+Implement mv: rename an existing reality marble. A naive implication would be first drop, mv, then collect
+
 Implement new: add a new config file in reality marble and project it into the system
 [DONE] Implement collect: collect a outside normal file into reality marble and make it a symlink
 Implement collect over directory
 [DONE] Implement drop: materialize the file and remove it from reality marble
+remove empty directory after drop
 Implement drop over directory
 
 Fix owner and mode when collect
+
+the scriptMarble should add execution bit when collect
 
 [DONE] Minimal log system
