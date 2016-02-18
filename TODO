@@ -18,6 +18,8 @@ Implement new: add a new config file in reality marble and project it into the s
 
 Implement mv: rename an existing reality marble. A naive implication would be first drop, mv, then collect 
 
+More marble types
+
 [DONE] Implement collect: collect a outside normal file into reality marble and make it a symlink
 [DONE] Implement drop: materialize the file and remove it from reality marble
 
