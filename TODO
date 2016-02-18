@@ -1,21 +1,24 @@
-Implement project: make a symlink outside pointing to the file in reality marble
-Implement materialize: make a outside symlink pointing to reality marble be a normal file
-
-Implement expand: expand an existing reality marble, project all config files 
-Implement init: initialize a new reality marble
-Implement dropall: drop all config files in reality marble
-
-Implement mv: rename an existing reality marble. A naive implication would be first drop, mv, then collect
-
-Implement new: add a new config file in reality marble and project it into the system
-[DONE] Implement collect: collect a outside normal file into reality marble and make it a symlink
-Implement collect over directory
-[DONE] Implement drop: materialize the file and remove it from reality marble
-remove empty directory after drop
-Implement drop over directory
-
 Fix owner and mode when collect
 
-the scriptMarble should add execution bit when collect
+ScriptMarble should add execution bit when collect
+
+remove empty directory after drop
+
+Implement expand: expand an existing reality marble, project all config files 
+
+Implement project: make a symlink outside pointing to the file in reality marble
+Implement materialize: make a outside symlink pointing to reality marble be a normal file, but with out delete it in reality marble
+
+Implement drop over directory
+Implement dropall: drop all config files in reality marble
+Implement collect over directory, may need some kind of exclude list
+
+Implement init: initialize a new reality marble
+Implement new: add a new config file in reality marble and project it into the system
+
+Implement mv: rename an existing reality marble. A naive implication would be first drop, mv, then collect 
+
+[DONE] Implement collect: collect a outside normal file into reality marble and make it a symlink
+[DONE] Implement drop: materialize the file and remove it from reality marble
 
 [DONE] Minimal log system
