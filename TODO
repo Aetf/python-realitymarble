@@ -4,19 +4,21 @@ ScriptMarble should add execution bit when collect
 
 remove empty directory after drop
 
-Implement expand: expand an existing reality marble, project all config files 
-
 Implement project: make a symlink outside pointing to the file in reality marble
 Implement materialize: make a outside symlink pointing to reality marble be a normal file, but with out delete it in reality marble
 
-Implement drop over directory
+Implement expand: expand an existing reality marble, project all config files 
 Implement dropall: drop all config files in reality marble
+
+Implement drop over directory
 Implement collect over directory, may need some kind of exclude list
 
-Implement init: initialize a new reality marble
 Implement new: add a new config file in reality marble and project it into the system
 
 Implement mv: rename an existing reality marble. A naive implication would be first drop, mv, then collect 
+Implement init: initialize a new reality marble
+
+Fix logging when sudolib were called in subprocess
 
 More marble types
 
