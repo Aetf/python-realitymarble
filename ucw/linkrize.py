@@ -5,10 +5,11 @@ import shutil
 import logging
 logger = logging.getLogger(__name__)
 
-from ucw.utils import canonical_path, resolve_conflict, sudo, retryWithSudo, unlink, rmdir
+from ucw.utils import canonical_path, unlink, rmdir, resolve_conflict
+from ucw.utils import sudolib
 
 
-@retryWithSudo
+@sudolib.retryWithSudo
 def unlinkrize(path):
     finished = False
     """Replace a symlink at path with its target"""
@@ -32,7 +33,7 @@ def unlinkrize(path):
             logger.info('roll back partially done operation for unlinkrize')
 
 
-@retryWithSudo
+@sudolib.retryWithSudo
 def linkrize(path, target):
     """Make the path a symlink to customization folder"""
     finished = False

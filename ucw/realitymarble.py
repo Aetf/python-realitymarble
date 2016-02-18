@@ -4,7 +4,7 @@ import sys
 import logging
 logger = logging.getLogger(__name__)
 
-from ucw.utils import canonical_path, is_sub, class_by_name
+from ucw.utils import canonical_path, is_sub, import_by_name
 from ucw.linkrize import linkrize, unlinkrize
 
 DEFAULT_CONFIG = """
@@ -93,7 +93,7 @@ class RealityMarble(object):
 
     def _create_phantasms(self, config):
         for ph in config['phantasms']:
-            clz = class_by_name(ph['type'])
+            clz = import_by_name(ph['type'])
             joint_path = canonical_path(ph['joint_path'])
             base_path = canonical_path(self.path, ph['name'])
             self.phantasms.append(clz(base_path, joint_path))

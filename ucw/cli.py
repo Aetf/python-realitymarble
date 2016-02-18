@@ -3,7 +3,6 @@ import json
 import logging
 
 from ucw.realitymarble import RealityMarble
-from ucw.utils import sudo, do, class_by_name
 
 
 @click.group(invoke_without_command=True)
@@ -51,14 +50,3 @@ def drop(ctx, files):
     """
     for f in files:
         ctx.obj['marble'].drop(f)
-
-
-@main.command(name='sudohelper')
-@click.pass_context
-@click.argument('method', required=True)
-@click.argument('args')
-def sudo_helper(ctx, method, args):
-    argv = json.loads(args)
-    #res = class_by_name(method)(*argv)
-    res = do(method, *argv)
-    click.echo(json.dumps(res))
