@@ -3,7 +3,7 @@ import logging
 import subprocess
 import sys
 
-from ucw.utils import canonical_path, import_by_name
+from realitymarble.utils import canonical_path, import_by_name
 
 
 logger = logging.getLogger(__name__)

@@ -5,8 +5,8 @@ import shutil
 import logging
 logger = logging.getLogger(__name__)
 
-from ucw.utils import canonical_path, unlink, rmdir, resolve_conflict
-from ucw.utils import sudolib
+from realitymarble.utils import canonical_path, unlink, rmdir, resolve_conflict
+from realitymarble.utils import sudolib
 
 
 @sudolib.retryWithSudo

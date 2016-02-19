@@ -4,25 +4,25 @@ import sys
 import logging
 logger = logging.getLogger(__name__)
 
-from ucw.utils import canonical_path, is_sub, import_by_name
-from ucw.linkrize import linkrize, unlinkrize
+from realitymarble.utils import canonical_path, is_sub, import_by_name
+from realitymarble.linkrize import linkrize, unlinkrize
 
 DEFAULT_CONFIG = """
 {
     "phantasms": [
         {
             "name": "etc",
-            "type": "Phantasm",
+            "type": "realitymarble.Phantasm",
             "joint_path": "/etc/"
         },
         {
             "name": "home",
-            "type": "NoHiddenPhantasm",
+            "type": "realitymarble.NoHiddenPhantasm",
             "joint_path": "/home/aetf/"
         },
         {
             "name": "scripts",
-            "type": "ScriptsPhantasm",
+            "type": "realitymarble.ScriptsPhantasm",
             "joint_path": "/home/aetf/.local/bin"
         }
     ]

@@ -1,8 +1,7 @@
 import click
-import json
 import logging
 
-from ucw.realitymarble import RealityMarble
+from realitymarble import RealityMarble
 
 
 @click.group(invoke_without_command=True)
