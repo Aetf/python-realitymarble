@@ -28,15 +28,6 @@ def is_sub(parent, path):
     return os.path.commonprefix([parent, path]) == parent
 
 
-def unlink(path, force=False):
-    """unlink the path, when force is True, ignore FileNotFoundError."""
-    try:
-        os.unlink(path)
-    except FileNotFoundError:
-        if not force:
-            raise
-
-
 def rmdir(path, stop_at='', ignore_fail_on_non_empty=False, continue_on_parent=True):
     """remove empty directories"""
     if not os.path.isdir(path):

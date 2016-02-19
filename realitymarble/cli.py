@@ -18,7 +18,7 @@ def main(ctx, reality_marble, debug):
     and recreate your system by projecting them on top of an existing system.
     """
     logging.basicConfig(level=logging.WARNING,
-                        format='%(name)s - [%(levelname)s] - %(message)s')
+                        format='%(name)10s - %(funcName)-18s - [%(levelname)5s]: %(message)s')
 
     marble = RealityMarble(reality_marble)
     if not ctx.obj:
@@ -49,3 +49,36 @@ def drop(ctx, files):
     """
     for f in files:
         ctx.obj['marble'].drop(f)
+
+
+@main.command()
+@click.pass_context
+@click.argument('files', nargs=-1, type=click.Path(dir_okay=False))
+def project(ctx, files):
+    """
+    Project corresponding file in your reality marble onto FILES.
+    """
+    for f in files:
+        ctx.obj['marble'].project(f)
+
+
+@main.command()
+@click.pass_context
+@click.argument('files', nargs=-1, type=click.Path(dir_okay=False))
+def materialize(ctx, files):
+    """
+    Don't manage FILES anymore.
+    """
+    for f in files:
+        ctx.obj['marble'].materialize(f)
+
+
+@main.command()
+@click.pass_context
+@click.argument('files', nargs=-1, type=click.Path(dir_okay=False))
+def touch(ctx, files):
+    """
+    Create new configuration files managed by reality marble.
+    """
+    for f in files:
+        ctx.obj['marble'].touch(f)
