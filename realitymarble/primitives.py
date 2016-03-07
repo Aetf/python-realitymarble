@@ -46,6 +46,17 @@ def maybe_merge(src, dest):
         logger.error('Destination is not a regular file: {}'.format(dest))
         return False
 
+    diffcmd = ['diff', '-q', src, dest]
+    try:
+        res = subprocess.run(diffcmd, universal_newlines=True)
+        if res.returncode == 0:
+            # two files are the same
+            return True
+    except subprocess.SubprocessError as err:
+        logger.exception(
+            'Error while execution of external program: {}'.format(' '.join(diffcmd)), err)
+        raise
+
     logger.warning('Calling external merge tool not implimented')
     return False
 
@@ -56,9 +67,9 @@ def edit(path):
     cmd = [editor, path]
     try:
         subprocess.run(cmd, check=True)
-    except CalledProcessError as e:
+    except subprocess.CalledProcessError as err:
         logger.exception(
-            'Error while execution of external program: {}'.format(' '.join(cmd)), e)
+            'Error while execution of external program: {}'.format(' '.join(cmd)), err)
         raise
 
 
