@@ -46,9 +46,9 @@ class Phantasm(object):
             internal_path = os.path.join(
                 self.base_path, os.path.relpath(external_path, self.joint_path))
 
-            logger.debug('target before adjust: %s', internal_path)
-            target = self._adjust(internal_path)
-            logger.debug('target after adjust: %s', internal_path)
+            logger.debug('internal_path before adjust: %s', internal_path)
+            internal_path = self._adjust(internal_path)
+            logger.debug('internal_path after adjust: %s', internal_path)
 
             return (len(self.joint_path), self._create_operation(internal_path, external_path))
         return (0, None)
