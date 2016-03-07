@@ -16,7 +16,8 @@ def exists(path):
 
 
 def copy(src, dest):
-    """copy file from source to target, w.r.t. correct mode and owner for target. Parent directories will be created."""
+    """copy file from source to target, w.r.t. correct mode and owner for target.
+    Parent directories will be created."""
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     return shutil.copyfile(src, dest)
 
@@ -57,7 +58,7 @@ def edit(path):
         subprocess.run(cmd, check=True)
     except CalledProcessError as e:
         logger.exception(
-            'Error while execution of external program: {}'.format(' '.join(cmd)))
+            'Error while execution of external program: {}'.format(' '.join(cmd)), e)
         raise
 
 
@@ -74,7 +75,7 @@ def _project_unchecked(internal_path, external_path):
         unlink(external_path, force=True)
         os.symlink(internal_path, external_path)
         finished = True
-    except Exception as err:
+    except Exception:
         logger.debug('Failed with exception', exc_info=True)
         raise
     finally:
@@ -97,7 +98,7 @@ def _materialize_unchecked(internal_path, external_path):
         unlink(external_path, force=True)
         copy(internal_path, external_path)
         finished = True
-    except Exception as err:
+    except Exception:
         logger.debug('Failed with exception', exc_info=True)
         raise
     finally:
@@ -108,16 +109,17 @@ def _materialize_unchecked(internal_path, external_path):
 
 
 class operations(object):
+    """Operatoins"""
     def __init__(self, base_path, internal_path, external_path):
         self.base_path = base_path
         self.internal_path = internal_path
         self.external_path = external_path
 
     def project_unchecked(self):
-    	return _project_unchecked(self.internal_path, self.external_path)
+        return _project_unchecked(self.internal_path, self.external_path)
 
     def managed(self):
-    	return _managed(self.base_path, self.external_path)
+        return _managed(self.base_path, self.external_path)
 
     def materialize_unchecked(self):
-    	return _materialize_unchecked(self.internal_path, self.external_path)
+        return _materialize_unchecked(self.internal_path, self.external_path)
