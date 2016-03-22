@@ -8,8 +8,9 @@ import shutil
 logger = logging.getLogger(__name__)
 
 
-def canonical_path(path, *paths, resolve_link=True):
+def canonical_path(path, *paths, **kwargs):
     """Canonicalize path, expand user and convert to abspath or realpath if resolve_link set to True. Paths to a directory are appended a slash."""
+    resolve_link = kwargs.pop('resolve_link', True)
     path = os.path.join(path, *paths)
     path = os.path.expanduser(path)
     if resolve_link:
