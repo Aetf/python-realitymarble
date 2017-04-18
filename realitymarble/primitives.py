@@ -63,6 +63,9 @@ def maybe_merge(src, dest):
 
 def edit(path):
     """use $EDITOR to edit file at path"""
+    # make sure the path exists first
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
     editor = os.getenv('EDITOR', 'vim')
     cmd = [editor, path]
     try:

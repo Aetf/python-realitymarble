@@ -43,7 +43,8 @@ class Phantasm(object):
         self.joint_path = utils.canonical_path(joint_path)
 
     def match(self, external_path):
-        """Attempt to match against external_path, if succeed, returns matched length and operation object"""
+        """Attempt to match against external_path, if succeed,
+        returns matched length and operation object"""
         if utils.is_sub(self.joint_path, external_path):
             internal_path = os.path.join(
                 self.base_path, os.path.relpath(external_path, self.joint_path))
